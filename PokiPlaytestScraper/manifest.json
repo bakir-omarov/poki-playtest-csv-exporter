@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Poki Playtest Data Scraper",
-  "version": "1.0",
+  "version": "0.2",
   "permissions": [
     "activeTab",
     "scripting"
