@@ -176,8 +176,8 @@ function updateUI(data) {
 // Function to export data to CSV
 function exportToCSV(data, filename) {
   const csvContent = "data:text/csv;charset=utf-8," 
-    + "time,version,country,duration,plays,link\n"
-    + data.map(e => `"${e.time}","${e.version}","${e.country}","${e.duration}","${e.plays}","${e.link}"`).join("\n");
+    + "time,version,country,duration(s),plays,link\n"
+    + data.map(e => `"${e.time}","${e.version}","${e.country}","${parseDuration(e.duration)}","${e.plays}","${e.link}"`).join("\n");
 
   const encodedUri = encodeURI(csvContent);
   const link = document.createElement("a");
@@ -185,6 +185,24 @@ function exportToCSV(data, filename) {
   link.setAttribute("download", filename);
   document.body.appendChild(link); 
   link.click();
+}
+
+
+// Lets save duration in seconds, so it will be ez to see average in excel
+function parseDuration(duration) {
+  try {
+    const parts = duration.split(':').map(Number);
+    if (parts.length === 3) {
+      return parts[0] * 3600 + parts[1] * 60 + parts[2];
+    } else if (parts.length === 2) {
+      return parts[0] * 60 + parts[1];
+    } else {
+      return 0;
+    }
+  } catch (error) {
+    console.error('Error parsing duration:', error);
+    return 0; // Return 0 or handle error case
+  }
 }
 
 // Event listener for the Scan button
