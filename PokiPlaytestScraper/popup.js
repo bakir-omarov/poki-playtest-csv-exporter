@@ -21,14 +21,14 @@ async function scanPlaytestsPage() {
       chrome.scripting.executeScript({
         target: { tabId: tab.id },
         function: () => {
-          const elements = document.querySelectorAll('.sc-erbdlo.iuyuvj, .sc-erbdlo.jqnghv');
+          const elements = document.querySelectorAll('.sc-bgzEgf.haEiYC, .sc-bgzEgf.lavrwa');
           const data = Array.from(elements).map(el => {
-            const time = el.querySelector('.sc-MAqyW')?.innerText || '';
-            let version = el.querySelector('.jFZqEi:nth-of-type(3)')?.innerText || el.querySelector('.jEvyKD:nth-of-type(3)')?.innerText || '';
-            let country = el.querySelector('.hqzFzW')?.title || el.querySelector('.jEvyKD .hqzFzW')?.title || '';
-            const duration = el.querySelector('.jFZqEi:nth-of-type(5)')?.innerText || el.querySelector('.jEvyKD:nth-of-type(5)')?.innerText || '';
-            let plays = el.querySelector('.jFZqEi:nth-of-type(6)')?.innerText || el.querySelector('.jEvyKD:nth-of-type(6)')?.innerText || '';
-            const link = el.querySelector('.irHIXF')?.href || '';
+            const time = el.querySelector('.sc-dDPqvT')?.innerText || '';
+            let version = el.querySelector('.sc-dMVFSy:nth-of-type(3) .sc-jwKbUx')?.innerText || '';
+            let country = el.querySelector('.sc-jKQSiE')?.title || '';
+            const duration = el.querySelector('.sc-dMVFSy:nth-of-type(5) .sc-jwKbUx')?.innerText || '';
+            let plays = el.querySelector('.sc-dMVFSy:nth-of-type(6) .sc-jwKbUx')?.innerText || '';
+            const link = el.querySelector('.sc-hHTYSt')?.href || '';
             return { time, version, country, duration, plays, link };
           });
           return data;
@@ -46,7 +46,7 @@ async function scanPlaytestsPage() {
       chrome.scripting.executeScript({
         target: { tabId: tab.id },
         function: () => {
-          const firstButton = document.querySelector('.sc-hKnpzZ.kcJGqg:first-of-type'); // Adjust based on your pagination logic
+          const firstButton = document.querySelector('.sc-fTrzCy:first-of-type'); // Adjust based on your pagination logic
           if (firstButton) {
             firstButton.click();
           }
@@ -62,7 +62,7 @@ async function scanPlaytestsPage() {
       chrome.scripting.executeScript({
         target: { tabId: tab.id },
         function: () => {
-          const nextButton = document.querySelector('.sc-hKnpzZ.kcJGqg:nth-last-of-type(2)'); // Adjust based on your pagination logic
+          const nextButton = document.querySelector('.sc-fTrzCy:nth-last-of-type(2)'); // Adjust based on your pagination logic
           if (nextButton) {
             nextButton.click();
           }
@@ -73,13 +73,20 @@ async function scanPlaytestsPage() {
     });
   }
 
-  async function isFirstPageActive() {
+  async function isFirstPageActive(tabId) {
     return new Promise(resolve => {
       chrome.scripting.executeScript({
         target: { tabId: tab.id },
         function: () => {
-          const firstPageButton = document.querySelector('.sc-hKnpzZ.kcJGqg:first-of-type');
-          return firstPageButton !== null;
+
+          const firstPageButton = document.querySelector('.sc-fTrzCy:first-of-type');
+          
+          if (firstPageButton) {
+            return firstPageButton.classList.contains('htdkXN');
+          } else {
+            return false;
+          }
+          
         },
       }, (results) => {
         resolve(results[0].result);
@@ -87,13 +94,21 @@ async function scanPlaytestsPage() {
     });
   }
 
+
   async function isNextPageActive() {
     return new Promise(resolve => {
       chrome.scripting.executeScript({
         target: { tabId: tab.id },
         function: () => {
-          const nextPageButton = document.querySelector('.sc-hKnpzZ.kcJGqg:nth-last-of-type(2)');
-          return nextPageButton !== null;
+
+          const firstPageButton = document.querySelector('.sc-fTrzCy:nth-last-of-type(2)');
+          
+          if (firstPageButton) {
+            return firstPageButton.classList.contains('htdkXN');
+          } else {
+            return false;
+          }
+
         },
       }, (results) => {
         resolve(results[0].result);
